@@ -73,6 +73,7 @@
 <a name="english"></a>
 
 ## 🇺🇸 English Introduction
+<img width="1238" height="863" alt="image" src="https://github.com/user-attachments/assets/88f17d63-b866-4c72-82a8-998dbff47690" />
 
 ### 🌟 Project Brief
 An interactive, high-precision web-based **Involute Spur Gear Geometric Generator & Twin-Gear Mesh Simulation Platform**. 
