@@ -32,6 +32,16 @@ export default function GearViewer({
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  // 底部重要参数栏收起/折叠状态
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+
+  useEffect(() => {
+    // 手机/小屏端（宽度小于768px）默认收起以防止阻挡齿轮主体
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsLegendCollapsed(true);
+    }
+  }, []);
   
   // 旋转控制
   const [rotAngle, setRotAngle] = useState(0);
@@ -721,33 +731,52 @@ export default function GearViewer({
         </svg>
       </div>
 
-      {/* 底部信息标注与技术指标栏 */}
-      <div className="absolute bottom-4 left-4 right-4 bg-[#0F0F12]/90 backdrop-blur-sm px-3 md:px-4 py-2.5 rounded-sm border border-[#27272A] flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center text-3xs sm:text-2xs text-[#71717A] gap-2.5">
-        <div className="flex flex-wrap gap-x-4 gap-y-1">
-          <div>
-            {t.gv_primary_pitch} <b className="font-mono text-white">{gear1.pitchDiameter.toFixed(2)} mm</b>
-          </div>
-          <div>
-            {t.gv_primary_tip} <b className="font-mono text-white">{gear1.addendumDiameter.toFixed(2)} mm</b>
-          </div>
-          {matingParams.enabled && (
-            <>
-              {gear2Data && (
-                <div>
-                  {t.gv_mating_tip} <b className="font-mono text-white">{gear2Data.calculations.addendumDiameter.toFixed(2)} mm</b>
-                </div>
-              )}
-              <div>
-                {t.gv_center_dist} <b className="font-mono text-amber-500 font-bold">{centerDistance.toFixed(3)} mm</b>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5 text-3xs text-[#52525B]">
-          <Move className="w-3 h-3" />
-          <span>{t.gv_move_hint}</span>
-        </div>
-      </div>
+       {/* 底部信息标注与技术指标栏 */}
+       {isLegendCollapsed ? (
+         <button
+           onClick={() => setIsLegendCollapsed(false)}
+           className="absolute bottom-4 left-4 bg-[#0F0F12]/90 hover:bg-[#18181B] border border-[#27272A] rounded-sm py-1.5 px-3 flex items-center gap-1.5 text-3xs text-[#A1A1AA] hover:text-white transition-all cursor-pointer backdrop-blur-sm shadow-md"
+           title={lang === 'zh' ? '展开主齿技术参数' : 'Expand gear specs'}
+         >
+           <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+           <span className="font-medium">{lang === 'zh' ? '展开齿轮参数 ▾' : 'Primary Specs ▾'}</span>
+         </button>
+       ) : (
+         <div className="absolute bottom-4 left-4 right-4 bg-[#0F0F12]/90 backdrop-blur-sm px-3 md:px-4 py-2.5 rounded-sm border border-[#27272A] flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center text-3xs sm:text-2xs text-[#71717A] gap-2.5 shadow-lg">
+           <div className="flex flex-wrap gap-x-4 gap-y-1">
+             <div>
+               {t.gv_primary_pitch} <b className="font-mono text-white">{gear1.pitchDiameter.toFixed(2)} mm</b>
+             </div>
+             <div>
+               {t.gv_primary_tip} <b className="font-mono text-white">{gear1.addendumDiameter.toFixed(2)} mm</b>
+             </div>
+             {matingParams.enabled && (
+               <>
+                 {gear2Data && (
+                   <div>
+                     {t.gv_mating_tip} <b className="font-mono text-white">{gear2Data.calculations.addendumDiameter.toFixed(2)} mm</b>
+                   </div>
+                 )}
+                 <div>
+                   {t.gv_center_dist} <b className="font-mono text-amber-500 font-bold">{centerDistance.toFixed(3)} mm</b>
+                 </div>
+               </>
+             )}
+           </div>
+           <div className="flex items-center justify-between w-full sm:w-auto gap-4 border-t border-[#27272A]/40 sm:border-t-0 pt-1.5 sm:pt-0 mt-1 sm:mt-0">
+             <div className="flex items-center gap-1.5 text-3xs text-[#52525B]">
+               <Move className="w-3 h-3 animate-pulse" />
+               <span>{t.gv_move_hint}</span>
+             </div>
+             <button
+               onClick={() => setIsLegendCollapsed(true)}
+               className="text-[#A1A1AA] hover:text-white text-3xs bg-[#18181B] hover:bg-[#27272A] px-2 py-0.5 rounded-sm border border-[#27272A] select-none transition-colors ml-auto cursor-pointer"
+             >
+               {lang === 'zh' ? '收起 ▴' : 'Collapse ▴'}
+             </button>
+           </div>
+         </div>
+       )}
     </div>
   );
 }
