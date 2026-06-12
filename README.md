@@ -1,5 +1,5 @@
 # ⚙️ 高精度渐开线齿轮几何发生引擎
-# ⚙️ High-Precision Involute Gear Geometry Generator
+High-Precision Involute Gear Geometry Generator
 
 [中文](#chinese) | [English](#english)
 
