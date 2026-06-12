@@ -1,4 +1,5 @@
 # ⚙️ 高精度渐开线齿轮几何发生器 / High-Precision Involute Gear Profile Generator
+<img width="1229" height="912" alt="image" src="https://github.com/user-attachments/assets/df528ca5-ea98-4a5e-a955-5c3c99dec540" />
 
 [中文](#chinese) | [English](#english)
 
@@ -79,6 +80,7 @@
 <a name="english"></a>
 
 ## 🇺🇸 English Project Introduction
+<img width="1224" height="841" alt="image" src="https://github.com/user-attachments/assets/4d2872e8-571f-4bbd-ae90-e3ea9a598ea0" />
 
 ### 🌟 Project Brief
 An interactive, high-precision web-based **Involute Spur Gear Geometric Generator & Twin-Gear Mesh Simulation Platform**.
