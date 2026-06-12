@@ -1,4 +1,5 @@
 # ⚙️ 高精度渐开线齿轮几何发生引擎/High-Precision Involute Gear Geometry Generator
+<img width="1236" height="796" alt="image" src="https://github.com/user-attachments/assets/b4fd6d32-155d-41c5-b20b-017ac93ea8d2" />
 
 [中文](#chinese) | [English](#english)
 
