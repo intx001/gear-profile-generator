@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { GearParams, MatingGearParams, RenderOptions } from '../types';
 import { generateFullGearSVGPath, calculateGear, generateSingleToothProfile, pointsToSVGPath } from '../utils/gearMath';
 import { ZoomIn, ZoomOut, Maximize2, Play, Pause, Move } from 'lucide-react';
+import { Language, TRANSLATIONS } from '../utils/lang';
 
 interface GearViewerProps {
   params: GearParams;
@@ -9,6 +10,7 @@ interface GearViewerProps {
   renderOptions: RenderOptions;
   onRenderOptionsChange: (r: RenderOptions) => void;
   onMatingChange: (m: MatingGearParams) => void;
+  lang?: Language;
 }
 
 export default function GearViewer({
@@ -17,6 +19,7 @@ export default function GearViewer({
   renderOptions,
   onRenderOptionsChange,
   onMatingChange,
+  lang = 'zh',
 }: GearViewerProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragAreaRef = useRef<HTMLDivElement>(null);
@@ -440,19 +443,21 @@ export default function GearViewer({
     );
   };
 
+  const t = TRANSLATIONS[lang];
+
   return (
     <div id="gear-viewer" className="bg-[#050505] rounded-lg border border-[#27272A] flex flex-col h-[400px] md:h-[520px] relative overflow-hidden select-none">
       {/* 顶部控制与视图切换栏 */}
       <div className="bg-[#0F0F12] border-b border-[#27272A] px-4 py-2.5 flex items-center justify-between gap-4 z-10">
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-          <span className="text-xs font-bold text-[#E4E4E7] tracking-wider uppercase">核心实况物理视图</span>
+          <span className="text-xs font-bold text-[#E4E4E7] tracking-wider uppercase">{t.gv_title}</span>
         </div>
 
         {/* 运动控制 (仅在全轮模式 & 啮合启用时展示) */}
         {viewerMode === 'full' && matingParams.enabled && (
           <div className="flex items-center gap-2">
-            <span className="text-2xs font-semibold text-[#A1A1AA]">副轮联动:</span>
+            <span className="text-2xs font-semibold text-[#A1A1AA]">{t.gv_mating_linkage}</span>
             <button
               onClick={() => onRenderOptionsChange({ ...renderOptions, animate: !renderOptions.animate })}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-2xs font-bold transition-all ${
@@ -461,7 +466,7 @@ export default function GearViewer({
                   : 'bg-[#27272A] text-white hover:bg-[#3E3E42]'
               }`}
             >
-              {renderOptions.animate ? '暂停运动' : '仿真旋转'}
+              {renderOptions.animate ? t.gv_pause : t.gv_simulate}
             </button>
           </div>
         )}
@@ -472,27 +477,27 @@ export default function GearViewer({
         <button
           onClick={handleZoomIn}
           className="p-1.5 text-[#A1A1AA] hover:text-amber-500 hover:bg-[#18181B] rounded-sm transition-colors"
-          title="放大视图"
+          title={t.gv_zoom_in}
         >
           <ZoomIn className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={handleZoomOut}
           className="p-1.5 text-[#A1A1AA] hover:text-amber-500 hover:bg-[#18181B] rounded-sm transition-colors"
-          title="缩小视图"
+          title={t.gv_zoom_out}
         >
           <ZoomOut className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={resetZoom}
           className="p-1.5 text-[#A1A1AA] hover:text-amber-500 hover:bg-[#18181B] rounded-sm transition-colors"
-          title="自适应视图居中"
+          title={t.gv_reset_view}
         >
           <Maximize2 className="w-3.5 h-3.5" />
         </button>
         <span className="h-3.5 w-px bg-[#27272A] mx-1"></span>
         <div className="px-1.5 font-mono text-3xs text-[#71717A]">
-          缩放: {(zoom * 10).toFixed(0)}%
+          {t.gv_zoom} {(zoom * 10).toFixed(0)}%
         </div>
       </div>
 
@@ -601,12 +606,11 @@ export default function GearViewer({
                 <g transform={`rotate(${theta1})`}>
                   <path
                     d={gear1Path}
-                    fill="none"
+                    fill={renderOptions.animate ? 'rgba(245, 158, 11, 0.08)' : 'rgba(245, 158, 11, 0.03)'}
                     stroke="#F59E0B"
                     strokeWidth={2}
                     vectorEffect="non-scaling-stroke"
                     className="transition-colors duration-150"
-                    style={{ fill: renderOptions.animate ? 'rgba(245, 158, 11, 0.08)' : 'rgba(245, 158, 11, 0.03)' }}
                     fillRule="evenodd"
                   />
                 </g>
@@ -624,7 +628,6 @@ export default function GearViewer({
                     strokeDasharray="2,2"
                   />
                 )}
-                
                 {renderOptions.showPitchCircle && (
                   <circle
                     cx={0}
@@ -632,12 +635,11 @@ export default function GearViewer({
                     r={gear1.pitchDiameter / 2}
                     fill="none"
                     stroke="#38BDF8"
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     vectorEffect="non-scaling-stroke"
                     strokeDasharray="2,2"
                   />
                 )}
-
                 {renderOptions.showBaseCircle && (
                   <circle
                     cx={0}
@@ -650,21 +652,18 @@ export default function GearViewer({
                     strokeDasharray="2,4"
                   />
                 )}
-
                 {renderOptions.showDedendumCircle && (
                   <circle
                     cx={0}
                     cy={0}
                     r={gear1.dedendumDiameter / 2}
                     fill="none"
-                    stroke="#F87171"
+                    stroke="#F43F5E"
                     strokeWidth={1.2}
                     vectorEffect="non-scaling-stroke"
                     strokeDasharray="2,2"
                   />
                 )}
-
-                {/* 主齿轮中心原点点 */}
                 <circle cx={0} cy={0} r={4 / zoom} fill="#F59E0B" stroke="#000000" strokeWidth={1} vectorEffect="non-scaling-stroke" />
               </>
           </g>
@@ -675,31 +674,29 @@ export default function GearViewer({
       <div className="absolute bottom-4 left-4 right-4 bg-[#0F0F12]/90 backdrop-blur-sm px-3 md:px-4 py-2.5 rounded-sm border border-[#27272A] flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center text-3xs sm:text-2xs text-[#71717A] gap-2.5">
         <div className="flex flex-wrap gap-x-4 gap-y-1">
           <div>
-            主齿分度圆: <b className="font-mono text-white">{gear1.pitchDiameter.toFixed(2)} mm</b>
+            {t.gv_primary_pitch} <b className="font-mono text-white">{gear1.pitchDiameter.toFixed(2)} mm</b>
           </div>
           <div>
-            主齿顶直径: <b className="font-mono text-white">{gear1.addendumDiameter.toFixed(2)} mm</b>
+            {t.gv_primary_tip} <b className="font-mono text-white">{gear1.addendumDiameter.toFixed(2)} mm</b>
           </div>
           {matingParams.enabled && (
             <>
               {gear2Data && (
                 <div>
-                  副齿顶直径: <b className="font-mono text-white">{gear2Data.calculations.addendumDiameter.toFixed(2)} mm</b>
+                  {t.gv_mating_tip} <b className="font-mono text-white">{gear2Data.calculations.addendumDiameter.toFixed(2)} mm</b>
                 </div>
               )}
               <div>
-                中心轴距: <b className="font-mono text-amber-500 font-bold">{centerDistance.toFixed(3)} mm</b>
+                {t.gv_center_dist} <b className="font-mono text-amber-500 font-bold">{centerDistance.toFixed(3)} mm</b>
               </div>
             </>
           )}
         </div>
         <div className="flex items-center gap-1.5 text-3xs text-[#52525B]">
           <Move className="w-3 h-3" />
-          <span>支持鼠标拖拽位移、滚轮无级缩放</span>
+          <span>{t.gv_move_hint}</span>
         </div>
       </div>
-
-
     </div>
   );
 }

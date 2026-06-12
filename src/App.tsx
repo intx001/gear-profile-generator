@@ -5,8 +5,12 @@ import ParameterPanel from './components/ParameterPanel';
 import StatsPanel from './components/StatsPanel';
 import GearViewer from './components/GearViewer';
 import { Cog, ShieldCheck, Printer, FileDown, Layers, Columns } from 'lucide-react';
+import { Language, TRANSLATIONS } from './utils/lang';
 
 export default function App() {
+  const [lang, setLang] = useState<Language>('zh');
+  const t = TRANSLATIONS[lang];
+
   // 1. 初始化齿轮主设计参数
   const [params, setParams] = useState<GearParams>({
     modulus: 2.0,            // 模数
@@ -69,14 +73,40 @@ export default function App() {
                 </span>
               </h1>
               <p className="text-2xs sm:text-xs text-[#71717A]">
-                支持标准/径向变位直齿轮数学建模，提供轻量化镂空腔体与割缝尺寸膨胀补偿，支持激光加工 1:1 SVG 矢量文件下载
+                {t.app_subtitle}
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 text-xs text-[#A1A1AA] font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>CAD_READY_TO_EXPORT (公制物理级标定)</span>
+          <div className="flex items-center gap-4">
+            {/* 中英文语系切换开关 */}
+            <div className="flex items-center gap-1 border border-[#27272A] p-0.5 rounded bg-[#141416]">
+              <button
+                onClick={() => setLang('zh')}
+                className={`px-2.5 py-1 text-2xs rounded font-bold transition-all ${
+                  lang === 'zh'
+                    ? 'bg-amber-500 text-black shadow-sm'
+                    : 'text-[#71717A] hover:text-[#E4E4E7]'
+                }`}
+              >
+                中文
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2.5 py-1 text-2xs rounded font-bold transition-all ${
+                  lang === 'en'
+                    ? 'bg-amber-500 text-black shadow-sm'
+                    : 'text-[#71717A] hover:text-[#E4E4E7]'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-[#A1A1AA] font-mono border-l border-[#27272A] pl-4">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>{t.app_cad_ready}</span>
+            </div>
           </div>
         </div>
       </header>
@@ -95,6 +125,7 @@ export default function App() {
               renderOptions={renderOptions}
               onRenderOptionsChange={setRenderOptions}
               onMatingChange={setMatingParams}
+              lang={lang}
             />
 
             {/* 2. 工艺尺寸实况计算数据卡 */}
@@ -102,6 +133,7 @@ export default function App() {
               params={params}
               calculations={calculations}
               unit={renderOptions.unit}
+              lang={lang}
             />
           </div>
 
@@ -116,6 +148,7 @@ export default function App() {
               onMatingChange={setMatingParams}
               renderOptions={renderOptions}
               onRenderOptionsChange={setRenderOptions}
+              lang={lang}
             />
             
           </div>
@@ -126,39 +159,37 @@ export default function App() {
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 border-t border-[#27272A] pt-8 text-xs text-[#71717A]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h4 className="font-bold text-amber-500 mb-3 flex items-center gap-1 uppercase tracking-wider">🌐 渐开线齿物理几何公式参考</h4>
+            <h4 className="font-bold text-amber-500 mb-3 flex items-center gap-1 uppercase tracking-wider">{t.app_formula_ref}</h4>
             <ul className="space-y-2 leading-relaxed text-[#A1A1AA] font-sans text-xs">
               <li className="flex items-start gap-2">
                 <span className="text-amber-500/80 font-bold font-mono">▸</span>
-                <span>分度圆直径：<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d = m × z</span> (标准齿轮齿部基准依据)</span>
+                <span>{t.app_formula_pitch}<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d = m × z</span>{t.app_formula_pitch_desc}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-500/80 font-bold font-mono">▸</span>
-                <span>基圆直径：<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>b</sub> = d × cos(α)</span> (决定渐开线型线的展成轨迹基准)</span>
+                <span>{t.app_formula_base}<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>b</sub> = d × cos(α)</span>{t.app_formula_base_desc}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-500/80 font-bold font-mono">▸</span>
-                <span>齿顶圆直径：<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>a</sub> = m × (z + 2 × h<sub>a</sub><sup>*</sup> + 2 × x)</span> (齿廓最外围边缘界线)</span>
+                <span>{t.app_formula_addendum}<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>a</sub> = m × (z + 2 × h<sub>a</sub><sup>*</sup> + 2 × x)</span>{t.app_formula_addendum_desc}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-500/80 font-bold font-mono">▸</span>
-                <span>齿根圆直径：<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>f</sub> = m × (z - 2 × h<sub>a</sub><sup>*</sup> - 2 × c<sup>*</sup> + 2 × x)</span> (轮齿槽底部最低圈)</span>
+                <span>{t.app_formula_dedendum}<span className="text-white font-mono bg-[#141416] px-1.5 py-0.5 rounded border border-[#27272A] text-2xs">d<sub>f</sub> = m × (z - 2 × h<sub>a</sub><sup>*</sup> - 2 × c<sup>*</sup> + 2 × x)</span>{t.app_formula_dedendum_desc}</span>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-amber-500 mb-3 flex items-center gap-1 uppercase tracking-wider">⚙️ 变位齿轮 (Profile Shift) 功用</h4>
+            <h4 className="font-bold text-amber-500 mb-3 flex items-center gap-1 uppercase tracking-wider">{t.app_purpose_shift}</h4>
             <p className="leading-relaxed text-[#A1A1AA] text-xs">
-              当齿轮齿数较少（如 <code className="font-mono bg-[#141416] text-[#E4E4E7] px-1 py-0.5 rounded">z &lt; 17</code>）时，标准齿轮滚法加工会导致由于刀具干涉削弱轮轴强度，即所谓的 <b>“齿根根切”</b>，极大降低轮齿抗剪折弯极限。
-              <br /><br />
-              在此系统里，通过设置 <b>正径向变位系数 <code className="font-mono bg-[#141416] text-[#E4E4E7] px-1 py-0.5 rounded">x &gt; 0</code></b>，你能观察到齿顶、齿分度圆以及渐开线物理向外侧生长，增大了轮齿根基厚度，从而从根本上消除弱切损害，优化整体轮齿强度与磨损。
+              {t.app_purpose_text}
             </p>
           </div>
         </div>
         
         <div className="mt-8 pt-6 border-t border-[#27272A] text-center text-[#52525B]">
-          <p>© 2026 高精度齿轮几何发生引擎. 本在线工具对数学公式结果负责，请在导入高速重载切削床前自测验证。</p>
+          <p>{t.app_copyright}</p>
         </div>
       </footer>
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "Gear Profile Generator",
-  "description": "An interactive, high-precision online tool to generate standard and profile-shifted (变位) involute gear profiles with real-time interactive simulation previews.",
+  "description": "An interactive, high-precision online tool to generate standard and profile-shifted involute gear profiles with real-time interactive simulation previews. / 支持渐开线标准及变位齿轮高精度高物理保真造型与实时交互物理运动啮合仿真的在线 CAD 设计工具。",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
