@@ -3,8 +3,8 @@ export type Language = 'zh' | 'en';
 export const TRANSLATIONS = {
   zh: {
     // App Header & Layout
-    app_subtitle: '支持标准/径向变位直齿轮数学建模，提供轻量化镂空腔体与割缝尺寸膨胀补偿，支持激光加工 1:1 SVG 矢量文件下载',
-    app_cad_ready: 'CAD_READY_TO_EXPORT (公制物理级标定)',
+    app_subtitle: '支持标准/径向变位直齿轮高精度数学建模与联动啮合仿真，可实时解算各项传动尺寸，支持 1:1 SVG 矢量文件下载',
+    app_cad_ready: '1:1 CAD 公制已标定',
     app_formula_ref: '🌐 渐开线齿物理几何公式参考',
     app_formula_pitch: '分度圆直径：',
     app_formula_pitch_desc: ' (标准齿轮齿部基准依据)',
@@ -130,8 +130,8 @@ export const TRANSLATIONS = {
   },
   en: {
     // App Header & Layout
-    app_subtitle: 'Mathematical modeling of standard/profile-shifted spur gears, featuring lightweight cutouts, laser cutting kerf compensation, and 1:1 SVG vectors direct download.',
-    app_cad_ready: 'CAD_READY_TO_EXPORT (Metric physical calibration)',
+    app_subtitle: 'High-precision mathematical modeling and mating mesh simulation of spur gears, supporting real-time dimension calculations and 1:1 SVG vector downloads.',
+    app_cad_ready: '1:1 CAD (Metric Scale)',
     app_formula_ref: '🌐 Involute Gear Mathematical Formulas',
     app_formula_pitch: 'Pitch Diameter: ',
     app_formula_pitch_desc: ' (Reference standard for gear geometry)',

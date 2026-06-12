@@ -627,7 +627,7 @@ export default function ParameterPanel({
           </label>
         </div>
 
-        <div className="pt-1.5 border-t border-[#27272A] flex justify-between gap-4">
+        <div className="pt-1.5 border-t border-[#27272A] flex flex-wrap items-center justify-between gap-2.5">
           <label className="flex items-center gap-1.5 text-[#A1A1AA] hover:text-white select-none cursor-pointer">
             <input
               type="checkbox"

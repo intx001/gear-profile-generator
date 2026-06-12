@@ -59,20 +59,17 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex flex-col text-[#E4E4E7] antialiased font-sans pb-12">
       {/* 顶部主导航栏 */}
-      <header className="bg-[#0F0F12] border-b border-[#27272A] sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <header className="bg-[#0F0F12] border-b border-[#27272A] sm:sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/10 transform rotate-45">
+            <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/10 transform rotate-45 select-none shrink-0">
               <Cog className="w-5.5 h-3.5 text-black stroke-[2.5] -rotate-45" />
             </div>
             <div>
               <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
                 GEAR PROFILE GENERATOR
-                <span className="text-2xs bg-amber-500/15 text-amber-500 font-bold px-2 py-0.5 rounded border border-amber-500/35">
-                  CAD / Laser Cut v2.2
-                </span>
               </h1>
-              <p className="text-2xs sm:text-xs text-[#71717A]">
+              <p className="text-2xs sm:text-xs text-[#71717A] hidden sm:block">
                 {t.app_subtitle}
               </p>
             </div>

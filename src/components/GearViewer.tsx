@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { GearParams, MatingGearParams, RenderOptions } from '../types';
 import { generateFullGearSVGPath, calculateGear, generateSingleToothProfile, pointsToSVGPath } from '../utils/gearMath';
-import { ZoomIn, ZoomOut, Maximize2, Play, Pause, Move } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Play, Pause, Move, Download } from 'lucide-react';
 import { Language, TRANSLATIONS } from '../utils/lang';
 
 interface GearViewerProps {
@@ -41,6 +41,45 @@ export default function GearViewer({
   // 1. 物理计算 & 高级啮合计算
   const gear1 = calculateGear(params);
   const gear2Data = matingMatingGearData();
+
+  // 1:1 物理尺寸 SVG 矢量文件下载功能
+  const downloadSVG = () => {
+    const { pathData: gear1Path } = generateFullGearSVGPath(params);
+    const margin = 10; // 10mm 留白边距
+    const size = Math.ceil(gear1.addendumDiameter + margin * 2);
+    const halfSize = size / 2;
+
+    const svgContent = `<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  High-Precision Spur Gear Vector (1:1 Metric Scale)
+  Modulus: ${params.modulus} mm
+  Teeth: ${params.teeth}
+  Profile Shift Coefficient (x): ${params.profileShift}
+  Addendum Coefficient (ha*): ${params.addendumCoeff}
+  Clearance Coefficient (c*): ${params.clearanceCoeff}
+  Base Diameter: ${gear1.baseDiameter.toFixed(3)} mm
+  Tip Diameter: ${gear1.addendumDiameter.toFixed(3)} mm
+  Root Diameter: ${gear1.dedendumDiameter.toFixed(3)} mm
+  Shaft Diameter: ${params.shaftDiameter} mm
+  Spokes: ${params.spokeType}
+  Generated via High-Precision Gear Profile Generator
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}mm" height="${size}mm" viewBox="-${halfSize} -${halfSize} ${size} ${size}">
+  <g id="gear-mesh" transform="rotate(-90)">
+    <path d="${gear1Path}" fill="none" stroke="#000000" stroke-width="0.2" fill-rule="evenodd" />
+  </g>
+</svg>`;
+
+    const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `spur-gear-m${params.modulus.toFixed(2)}-z${params.teeth}-x${params.profileShift.toFixed(2)}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   // 共享的单齿微观几何量
   const r_geom = (params.modulus * params.teeth) / 2;
@@ -454,22 +493,34 @@ export default function GearViewer({
           <span className="text-xs font-bold text-[#E4E4E7] tracking-wider uppercase">{t.gv_title}</span>
         </div>
 
-        {/* 运动控制 (仅在全轮模式 & 啮合启用时展示) */}
-        {viewerMode === 'full' && matingParams.enabled && (
-          <div className="flex items-center gap-2">
-            <span className="text-2xs font-semibold text-[#A1A1AA]">{t.gv_mating_linkage}</span>
-            <button
-              onClick={() => onRenderOptionsChange({ ...renderOptions, animate: !renderOptions.animate })}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-2xs font-bold transition-all ${
-                renderOptions.animate
-                  ? 'bg-amber-500 text-black hover:bg-amber-400'
-                  : 'bg-[#27272A] text-white hover:bg-[#3E3E42]'
-              }`}
-            >
-              {renderOptions.animate ? t.gv_pause : t.gv_simulate}
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {/* 运动控制 (仅在全轮模式 & 啮合启用时展示) */}
+          {viewerMode === 'full' && matingParams.enabled && (
+            <div className="flex items-center gap-2 border-r border-[#27272A] pr-3">
+              <span className="text-2xs font-semibold text-[#A1A1AA] hidden xs:inline">{t.gv_mating_linkage}</span>
+              <button
+                onClick={() => onRenderOptionsChange({ ...renderOptions, animate: !renderOptions.animate })}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-2xs font-bold transition-all ${
+                  renderOptions.animate
+                    ? 'bg-amber-500 text-black hover:bg-amber-400'
+                    : 'bg-[#27272A] text-white hover:bg-[#3E3E42]'
+                }`}
+              >
+                {renderOptions.animate ? t.gv_pause : t.gv_simulate}
+              </button>
+            </div>
+          )}
+
+          {/* SVG 1:1 Vector Export Button */}
+          <button
+            onClick={downloadSVG}
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black text-2xs font-bold rounded-sm transition-all"
+            title={lang === 'zh' ? '导出 1:1 公制高精度 CAD 直切 SVG 矢量图' : 'Export 1:1 Metric precision CAD ready SVG vector'}
+          >
+            <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>{lang === 'zh' ? '下载 1:1 SVG' : 'Download 1:1 SVG'}</span>
+          </button>
+        </div>
       </div>
 
       {/* 缩放控制浮动栏 */}
